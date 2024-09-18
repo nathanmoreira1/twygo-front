@@ -26,10 +26,12 @@ import {
   ModalFooter,
   useDisclosure,
   useToast,
+  useBreakpointValue, // Importante para definir o layout com base no tamanho da tela
 } from "@chakra-ui/react";
 import axios from "axios";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { Course } from "./[id]/types";
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
@@ -40,7 +42,6 @@ export default function Courses() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const router = useRouter();
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -66,6 +67,7 @@ export default function Courses() {
 
   useEffect(() => {
     fetchCourses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFilter = async () => {
@@ -76,7 +78,7 @@ export default function Courses() {
           description: filterDescription,
         },
       });
-      setCourses(response.data);
+      setCourses(response.data.courses);
     } catch (error) {
       console.error("Erro ao aplicar filtros:", error);
     }
@@ -112,6 +114,13 @@ export default function Courses() {
     onOpen();
   };
 
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  const stackDirection = useBreakpointValue<"row" | "column">({
+    base: "column",
+    md: "row",
+  });
+
   if (loading) {
     return (
       <Box
@@ -127,7 +136,6 @@ export default function Courses() {
 
   return (
     <Box padding="6" bg="gray.100" minHeight={"100vh"}>
-      {/* Filtro de Cursos */}
       <Box mb="8" bg="gray.50" p="6" borderRadius="md" boxShadow="lg">
         <Heading as="h1" mb="6" textAlign="center" color="teal.500">
           Gerenciamento de Cursos
@@ -153,14 +161,24 @@ export default function Courses() {
           </FormControl>
         </Stack>
 
-        <Box display="flex" justifyContent="flex-end">
-          <Stack direction="row" spacing="4">
-            <Button colorScheme="teal" onClick={handleFilter}>
+        <Box display="flex" justifyContent="flex-end" width="100%">
+          <Stack
+            direction={stackDirection}
+            spacing="4"
+            width={stackDirection === "column" ? "100%" : "auto"} // Ajusta a largura do Stack com base na direção
+            alignItems={stackDirection === "column" ? "stretch" : "flex-start"}
+          >
+            <Button
+              colorScheme="teal"
+              onClick={handleFilter}
+              width={stackDirection === "column" ? "100%" : "auto"} // Define a largura dos botões como auto para telas grandes
+            >
               Aplicar Filtros
             </Button>
             <Button
               colorScheme="blue"
               onClick={() => router.push("/courses/new")}
+              width={stackDirection === "column" ? "100%" : "auto"} // Define a largura dos botões como auto para telas grandes
             >
               Criar Novo Curso
             </Button>
@@ -170,25 +188,73 @@ export default function Courses() {
 
       <Divider mb="6" />
 
-      <TableContainer bg="white" borderRadius="md" boxShadow="md">
-        <Table variant="simple">
-          <Thead bg="teal.500">
-            <Tr>
-              <Th color="white">Título</Th>
-              <Th color="white">Descrição</Th>
-              <Th color="white">Data de Criação</Th>
-              <Th color="white">Ações</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {courses.length > 0 ? (
-              courses.map(
-                (course: {
-                  id: number;
-                  title: string;
-                  description: string;
-                  created_at: string;
-                }) => (
+      {isMobile ? (
+        // Exibição de cartões em dispositivos móveis
+        <Stack spacing={4}>
+          {courses.length > 0 ? (
+            courses.map((course: Course) => (
+              <Box
+                key={course.id}
+                p={4}
+                bg="white"
+                borderRadius="md"
+                boxShadow="md"
+                mb="4"
+              >
+                <Heading size="md" color="teal.500">
+                  {course.title}
+                </Heading>
+                <Box mt={2}>
+                  <b>Descrição:</b> {course.description}
+                </Box>
+                <Box mt={2}>
+                  <b>Data de Criação:</b>{" "}
+                  {new Date(course.created_at).toLocaleDateString()}
+                </Box>
+                <Stack mt={4} direction="row" spacing="4">
+                  <Button
+                    colorScheme="teal"
+                    variant="outline"
+                    onClick={() => router.push(`/courses/${course.id}`)}
+                  >
+                    <FaEye />
+                  </Button>
+                  <Button
+                    colorScheme="yellow"
+                    variant="outline"
+                    onClick={() => router.push(`/courses/${course.id}/edit`)}
+                  >
+                    <FaEdit />
+                  </Button>
+                  <Button
+                    colorScheme="red"
+                    variant="outline"
+                    onClick={() => openDeleteModal(course.id)}
+                  >
+                    <FaTrash />
+                  </Button>
+                </Stack>
+              </Box>
+            ))
+          ) : (
+            <Box textAlign="center">Nenhum curso encontrado.</Box>
+          )}
+        </Stack>
+      ) : (
+        // Exibição de tabela em dispositivos maiores
+        <TableContainer bg="white" borderRadius="md" boxShadow="md">
+          <Table variant="simple">
+            <Thead bg="teal.500">
+              <Tr>
+                <Th color="white">Título</Th>
+                <Th color="white">Descrição</Th>
+                <Th color="white">Data de Criação</Th>
+                <Th color="white">Ações</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {courses.length > 0 ? (
+                courses.map((course: Course) => (
                   <Tr key={course.id}>
                     <Td>{course.title}</Td>
                     <Td>{course.description}</Td>
@@ -221,61 +287,60 @@ export default function Courses() {
                       </Button>
                     </Td>
                   </Tr>
-                )
-              )
-            ) : (
-              <Tr>
-                <Td colSpan={5} textAlign="center">
-                  Nenhum curso encontrado.
-                </Td>
-              </Tr>
-            )}
-          </Tbody>
-        </Table>
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          mt="6"
-          p="4"
-          bg="white"
-          borderRadius="md"
-          boxShadow="md"
-        >
-          <Button
-            onClick={() => fetchCourses(currentPage - 1)}
-            isDisabled={currentPage === 1}
-            colorScheme="teal"
-            variant="solid"
-            size="sm"
-            mr="2"
-          >
-            Anterior
-          </Button>
+                ))
+              ) : (
+                <Tr>
+                  <Td colSpan={4} textAlign="center">
+                    Nenhum curso encontrado.
+                  </Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
           <Box
-            px="4"
-            py="2"
-            bg="gray.50"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            mt="6"
+            p="4"
+            bg="white"
             borderRadius="md"
-            fontWeight="bold"
-            fontSize="md"
-            color="gray.700"
+            boxShadow="md"
           >
-            Página {currentPage} de {totalPages}
+            <Button
+              onClick={() => fetchCourses(currentPage - 1)}
+              isDisabled={currentPage === 1}
+              colorScheme="teal"
+              variant="solid"
+              size="sm"
+              mr="2"
+            >
+              Anterior
+            </Button>
+            <Box
+              px="4"
+              py="2"
+              bg="gray.50"
+              borderRadius="md"
+              fontWeight="bold"
+              fontSize="md"
+              color="gray.700"
+            >
+              Página {currentPage} de {totalPages}
+            </Box>
+            <Button
+              onClick={() => fetchCourses(currentPage + 1)}
+              isDisabled={currentPage === totalPages}
+              colorScheme="teal"
+              variant="solid"
+              size="sm"
+              ml="2"
+            >
+              Próxima
+            </Button>
           </Box>
-          <Button
-            onClick={() => fetchCourses(currentPage + 1)}
-            isDisabled={currentPage === totalPages}
-            colorScheme="teal"
-            variant="solid"
-            size="sm"
-            ml="2"
-          >
-            Próxima
-          </Button>
-        </Box>
-      </TableContainer>
-
+        </TableContainer>
+      )}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

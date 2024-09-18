@@ -8,9 +8,13 @@ import {
   Spinner,
   Text,
   VStack,
+  Link,
 } from "@chakra-ui/react";
-import router, { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
+
+import "video.js/dist/video-js.css";
+import videojs from "video.js";
 
 export default function CourseVideoPage({
   params,
@@ -19,6 +23,8 @@ export default function CourseVideoPage({
 }) {
   const id = params.id;
   const video_id = params.video_id;
+
+  const videoRef = useRef(null);
 
   const router = useRouter();
 
@@ -45,6 +51,22 @@ export default function CourseVideoPage({
 
     fetchVideoData();
   }, [id, video_id]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const player = videojs(videoRef.current, {
+        controls: true,
+        preload: "auto",
+        fluid: true,
+      });
+
+      return () => {
+        if (player) {
+          player.dispose();
+        }
+      };
+    }
+  }, []);
 
   if (loading) {
     return (
@@ -107,17 +129,16 @@ export default function CourseVideoPage({
         <VStack spacing={4} align="stretch">
           <Box borderRadius="md" boxShadow="md" overflow="hidden">
             <video
+              ref={videoRef}
+              className="video-js vjs-default-skin"
               controls
-              style={{
-                width: "100%",
-                borderRadius: "8px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-              }}
+              preload="auto"
+              playsInline
+              width={"100%"}
+              height={"auto"}
+              style={{ width: "100%", height: "auto" }}
             >
-              <source
-                src={`/api/courses/${id}/videos/${video_id}/stream`}
-                type="video/mp4"
-              />
+              <source src={`/api/courses/${id}/videos/${video_id}/stream`} />
               Seu navegador não suporta o elemento de vídeo.
             </video>
           </Box>
@@ -128,6 +149,15 @@ export default function CourseVideoPage({
             <Text color="gray.600">
               Assista ao vídeo do curso. Você pode usar os controles para
               reproduzir, pausar e ajustar o volume conforme necessário.
+            </Text>
+            <Text mt={2}>
+              <Link
+                href={`/api/courses/${id}/videos/${video_id}/stream`}
+                color="blue.500"
+                isExternal
+              >
+                Está com problemas para visualizar o vídeo? Clique aqui
+              </Link>
             </Text>
           </Box>
           <Box display="flex" justifyContent={"space-between"} mt={4}>

@@ -24,6 +24,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
@@ -115,6 +116,8 @@ export default function CoursePage({ params }: { params: { id: string } }) {
     return `${minutes}m ${remainingSeconds}s`;
   }
 
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   if (loading) {
     return (
       <Box
@@ -180,108 +183,213 @@ export default function CoursePage({ params }: { params: { id: string } }) {
           </Text>
         </Box>
 
-        <Box borderRadius="md" boxShadow="md" p={4} bg="gray.50">
-          <Heading as="h2" size="lg" mb="4" color="teal.600">
-            Aulas
-          </Heading>
-          <TableContainer>
-            <Table variant="simple">
-              <Thead bg="teal.500">
-                <Tr>
-                  <Th color="white">Nome</Th>
-                  <Th color="white">Duração</Th>
-                  <Th color="white">Ações</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {videos.length > 0 ? (
-                  videos.map((video: Video) => (
-                    <Tr key={video.id}>
-                      <Td>{video.title}</Td>
-                      <Td>{convertSecondsToMinutes(video.duration)}</Td>
-                      <Td>
-                        <Button
-                          variant="link"
-                          colorScheme="teal"
-                          mr="2"
-                          onClick={() =>
-                            router.push(`/courses/${id}/videos/${video.id}`)
-                          }
-                        >
-                          <FaEye />
-                        </Button>
-                        <Button
-                          variant="link"
-                          colorScheme="yellow"
-                          mr="2"
-                          onClick={() =>
-                            router.push(
-                              `/courses/${id}/videos/${video.id}/edit`
-                            )
-                          }
-                        >
-                          <FaEdit />
-                        </Button>
-                        <Button
-                          variant="link"
-                          colorScheme="red"
-                          onClick={() => openDeleteModal(video.id)}
-                        >
-                          <FaTrash />
-                        </Button>
+        {isMobile ? (
+          <>
+            <Stack spacing={4}>
+              {videos.length > 0 ? (
+                videos.map((video: Video) => (
+                  <Box
+                    key={video.id}
+                    p={4}
+                    bg="white"
+                    borderRadius="md"
+                    boxShadow="md"
+                    mb="4"
+                  >
+                    <Heading size="md" color="teal.500">
+                      {video.title}
+                    </Heading>
+                    <Box mt={2}>
+                      <b>Duração:</b>{" "}
+                      {video.duration
+                        ? convertSecondsToMinutes(video.duration)
+                        : "Processando..."}
+                    </Box>
+                    <Stack mt={4} direction="row" spacing="4">
+                      <Button
+                        colorScheme="teal"
+                        variant="outline"
+                        onClick={() =>
+                          router.push(`/courses/${id}/videos/${video.id}`)
+                        }
+                      >
+                        <FaEye />
+                      </Button>
+                      <Button
+                        colorScheme="yellow"
+                        variant="outline"
+                        onClick={() =>
+                          router.push(`/courses/${id}/videos/${video.id}/edit`)
+                        }
+                      >
+                        <FaEdit />
+                      </Button>
+                      <Button
+                        colorScheme="red"
+                        variant="outline"
+                        onClick={() => openDeleteModal(video.id)}
+                      >
+                        <FaTrash />
+                      </Button>
+                    </Stack>
+                  </Box>
+                ))
+              ) : (
+                <Box textAlign="center">Nenhum video encontrado.</Box>
+              )}
+            </Stack>
+
+            {/* Paginação para Mobile */}
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              mt="6"
+              p="4"
+            >
+              <Button
+                onClick={() => fetchCourseData(currentPage - 1)}
+                isDisabled={currentPage === 1}
+                colorScheme="teal"
+                variant="solid"
+                size="sm"
+                mr="2"
+              >
+                Anterior
+              </Button>
+              <Box
+                px="4"
+                py="2"
+                bg="gray.50"
+                borderRadius="md"
+                fontWeight="bold"
+                fontSize="md"
+                color="gray.700"
+              >
+                Página {currentPage} de {totalPages}
+              </Box>
+              <Button
+                onClick={() => fetchCourseData(currentPage + 1)}
+                isDisabled={currentPage === totalPages}
+                colorScheme="teal"
+                variant="solid"
+                size="sm"
+                ml="2"
+              >
+                Próxima
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <Box borderRadius="md" boxShadow="md" p={4} bg="gray.50">
+            <Heading as="h2" size="lg" mb="4" color="teal.600">
+              Aulas
+            </Heading>
+            <TableContainer>
+              <Table variant="simple">
+                <Thead bg="teal.500">
+                  <Tr>
+                    <Th color="white">Nome</Th>
+                    <Th color="white">Duração</Th>
+                    <Th color="white">Ações</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {videos.length > 0 ? (
+                    videos.map((video: Video) => (
+                      <Tr key={video.id}>
+                        <Td>{video.title}</Td>
+                        <Td>
+                          {video.duration
+                            ? convertSecondsToMinutes(video.duration)
+                            : "Processando..."}
+                        </Td>
+                        <Td>
+                          <Button
+                            variant="link"
+                            colorScheme="teal"
+                            mr="2"
+                            onClick={() =>
+                              router.push(`/courses/${id}/videos/${video.id}`)
+                            }
+                          >
+                            <FaEye />
+                          </Button>
+                          <Button
+                            variant="link"
+                            colorScheme="yellow"
+                            mr="2"
+                            onClick={() =>
+                              router.push(
+                                `/courses/${id}/videos/${video.id}/edit`
+                              )
+                            }
+                          >
+                            <FaEdit />
+                          </Button>
+                          <Button
+                            variant="link"
+                            colorScheme="red"
+                            onClick={() => openDeleteModal(video.id)}
+                          >
+                            <FaTrash />
+                          </Button>
+                        </Td>
+                      </Tr>
+                    ))
+                  ) : (
+                    <Tr>
+                      <Td colSpan={3} textAlign="center">
+                        Nenhum vídeo encontrado.
                       </Td>
                     </Tr>
-                  ))
-                ) : (
-                  <Tr>
-                    <Td colSpan={3} textAlign="center">
-                      Nenhum vídeo encontrado.
-                    </Td>
-                  </Tr>
-                )}
-              </Tbody>
-            </Table>
-          </TableContainer>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            mt="6"
-            p="4"
-          >
-            <Button
-              onClick={() => fetchCourseData(currentPage - 1)}
-              isDisabled={currentPage === 1}
-              colorScheme="teal"
-              variant="solid"
-              size="sm"
-              mr="2"
-            >
-              Anterior
-            </Button>
+                  )}
+                </Tbody>
+              </Table>
+            </TableContainer>
+
+            {/* Paginação para Desktop */}
             <Box
-              px="4"
-              py="2"
-              bg="gray.50"
-              borderRadius="md"
-              fontWeight="bold"
-              fontSize="md"
-              color="gray.700"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              mt="6"
+              p="4"
             >
-              Página {currentPage} de {totalPages}
+              <Button
+                onClick={() => fetchCourseData(currentPage - 1)}
+                isDisabled={currentPage === 1}
+                colorScheme="teal"
+                variant="solid"
+                size="sm"
+                mr="2"
+              >
+                Anterior
+              </Button>
+              <Box
+                px="4"
+                py="2"
+                bg="gray.50"
+                borderRadius="md"
+                fontWeight="bold"
+                fontSize="md"
+                color="gray.700"
+              >
+                Página {currentPage} de {totalPages}
+              </Box>
+              <Button
+                onClick={() => fetchCourseData(currentPage + 1)}
+                isDisabled={currentPage === totalPages}
+                colorScheme="teal"
+                variant="solid"
+                size="sm"
+                ml="2"
+              >
+                Próxima
+              </Button>
             </Box>
-            <Button
-              onClick={() => fetchCourseData(currentPage + 1)}
-              isDisabled={currentPage === totalPages}
-              colorScheme="teal"
-              variant="solid"
-              size="sm"
-              ml="2"
-            >
-              Próxima
-            </Button>
           </Box>
-        </Box>
+        )}
       </Stack>
 
       <Modal isOpen={isOpen} onClose={onClose}>

@@ -72,8 +72,6 @@ export default function CourseReportsPage({
         );
         const finalData = finalResponse.data;
 
-        console.log(finalData);
-
         const labels = finalData.videos.map((video: Video) => video.title);
         const durations = finalData.videos.map(
           (video: Video) => video.duration
@@ -142,34 +140,38 @@ export default function CourseReportsPage({
         </Box>
       )}
 
-      {/* Menu lateral como Drawer em dispositivos móveis */}
-      {isMobile && (
-        <>
-          <IconButton
-            aria-label="Open menu"
-            icon={<FaBars />}
-            onClick={onOpen}
-            m={4}
-          />
-          <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-            <DrawerOverlay />
-            <DrawerContent>
-              <SidebarContent />
-            </DrawerContent>
-          </Drawer>
-        </>
-      )}
-
       {/* Área principal para os relatórios */}
       <Box flex="1" p={6}>
-        <Button
-          leftIcon={<FaArrowLeft />}
-          colorScheme="blue"
-          onClick={() => router.push(`/courses/${params.id}`)}
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
           mb={6}
         >
-          Voltar para Curso
-        </Button>
+          <Button
+            leftIcon={<FaArrowLeft />}
+            colorScheme="blue"
+            onClick={() => router.push(`/courses/${params.id}`)}
+          >
+            Voltar para Curso
+          </Button>
+          {/* Menu lateral como Drawer em dispositivos móveis */}
+          {isMobile && (
+            <>
+              <IconButton
+                aria-label="Open menu"
+                icon={<FaBars />}
+                onClick={onOpen}
+              />
+              <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+                <DrawerOverlay />
+                <DrawerContent>
+                  <SidebarContent />
+                </DrawerContent>
+              </Drawer>
+            </>
+          )}
+        </Box>
         <Heading size="lg" mb={6}>
           {reports.find((report) => report.id === selectedReport)?.name}
         </Heading>
@@ -177,9 +179,9 @@ export default function CourseReportsPage({
           <Box>
             <Text mb={10}>Gráfico de duração dos vídeos:</Text>
             <Box
-              width="500px" // Ajuste o valor conforme necessário
-              height="500px" // Ajuste o valor conforme necessário
-              mx="auto" // Centraliza o gráfico horizontalmente
+              width={{ base: "100%", md: "500px" }}
+              height={{ base: "100%", md: "500px" }}
+              mx="auto"
             >
               <Pie
                 data={videoData}
