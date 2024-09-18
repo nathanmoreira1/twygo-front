@@ -21,7 +21,7 @@ Este é o frontend desenvolvido com Next.js para interagir com a API backend. O 
 1. **Clone o repositório**
 
    ```bash
-   git clone https://github.com/nathanmoreira1/seu-repositorio.git
+   git clone https://github.com/nathanmoreira1/twygo-front.git
    cd seu-repositorio
 
    ```
