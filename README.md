@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend - Next.js
 
-## Getting Started
+## Descrição
 
-First, run the development server:
+Este é o frontend desenvolvido com Next.js para interagir com a API backend. O projeto utiliza Docker para facilitar o desenvolvimento e a configuração do ambiente. A aplicação é responsável por exibir informações dos cursos e vídeos de forma interativa e moderna.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Tecnologias
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Next.js
+- React
+- Docker
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Pré-requisitos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Node.js (para desenvolvimento local)
+- Docker (para desenvolvimento com contêineres)
+- Docker Compose (para orquestrar os contêineres)
 
-## Learn More
+## Configuração
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone o repositório**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   git clone https://github.com/seu-usuario/seu-repositorio.git
+   cd seu-repositorio
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Crie o arquivo .env.local**
 
-## Deploy on Vercel
+Copie o arquivo de exemplo e ajuste as variáveis conforme necessário:
+cp .env.local.example .env.local
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Desenvolvimento com Docker**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Para iniciar a aplicação utilizando Docker, execute:
+docker-compose up --build
+
+4. **Acesse a aplicação**
+
+A aplicação estará disponível em http://localhost:3000 dentro do Docker.
