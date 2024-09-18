@@ -30,7 +30,7 @@ Este é o frontend desenvolvido com Next.js para interagir com a API backend. O 
 
    Copie o arquivo de exemplo (.env.local.example) renomeando-o para .env.local
 
-   Depois, na variável de ambiente API_URL, coloque seu valor como http://<SEU_IP_AQUI>:3001 trocando "<SEU_IP_AQUI>" pelo seu IP.
+   Depois, na variável de ambiente API_URL, coloque seu valor como http://<SEU_IP>:3001 trocando "<SEU_IP>" pelo seu IP.
 
 4. **Desenvolvimento com Docker**
 
@@ -43,4 +43,4 @@ Este é o frontend desenvolvido com Next.js para interagir com a API backend. O 
 
 5. **Acesse a aplicação**
 
-   A aplicação estará disponível em http://localhost:3000 dentro do Docker.
+   A aplicação estará disponível em http://<SEU_IP>:3000 dentro do Docker.
