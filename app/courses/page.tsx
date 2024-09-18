@@ -213,8 +213,8 @@ export default function Courses() {
                   {convertSecondsToMinutes(course.total_duration)}
                 </Box>
                 <Box mt={2}>
-                  <b>Data de Criação:</b>{" "}
-                  {new Date(course.created_at).toLocaleDateString()}
+                  <b>Data de Término:</b>{" "}
+                  {new Date(course.end_date).toLocaleDateString()}
                 </Box>
                 <Stack mt={4} direction="row" spacing="4">
                   <Button
@@ -254,7 +254,7 @@ export default function Courses() {
                 <Th color="white">Título</Th>
                 <Th color="white">Descrição</Th>
                 <Th color="white">Tempo de Duração</Th>
-                <Th color="white">Data de Criação</Th>
+                <Th color="white">Data de Término</Th>
                 <Th color="white">Ações</Th>
               </Tr>
             </Thead>
@@ -265,7 +265,7 @@ export default function Courses() {
                     <Td>{course.title}</Td>
                     <Td>{course.description}</Td>
                     <Td>{convertSecondsToMinutes(course.total_duration)}</Td>
-                    <Td>{new Date(course.created_at).toLocaleDateString()}</Td>
+                    <Td>{new Date(course.end_date).toLocaleDateString()}</Td>
                     <Td>
                       <Button
                         variant="link"

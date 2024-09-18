@@ -16,7 +16,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Twygo App",
+  title: "Twygo",
   description: "Site de aulas online.",
 };
 
