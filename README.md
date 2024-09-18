@@ -1,4 +1,4 @@
-# Frontend - Next.js
+# Frontend - Twygo
 
 ## Descrição
 
@@ -32,7 +32,7 @@ Este é o frontend desenvolvido com Next.js para interagir com a API backend. O 
 
    Depois, na variável de ambiente API_URL, coloque seu valor como http://<SEU_IP>:3001 trocando "<SEU_IP>" pelo seu IP.
 
-4. **Desenvolvimento com Docker**
+3. **Desenvolvimento com Docker**
 
    Para iniciar a aplicação utilizando Docker, execute:
 
@@ -41,6 +41,6 @@ Este é o frontend desenvolvido com Next.js para interagir com a API backend. O 
 
    ```
 
-5. **Acesse a aplicação**
+4. **Acesse a aplicação**
 
    A aplicação estará disponível em http://<SEU_IP>:3000 dentro do Docker.
