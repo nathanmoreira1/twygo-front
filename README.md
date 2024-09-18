@@ -22,7 +22,7 @@ Este é o frontend desenvolvido com Next.js para interagir com a API backend. O 
 
    ```bash
    git clone https://github.com/nathanmoreira1/twygo-front.git
-   cd seu-repositorio
+   cd twygo-front
 
    ```
 
