@@ -30,6 +30,7 @@ import axios from "axios";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 import { Video, Course } from "@/app/courses/[id]/types";
+import { convertSecondsToMinutes } from "@/app/helpers/convertSecondsToMinutes";
 
 export default function CoursePage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -108,13 +109,6 @@ export default function CoursePage({ params }: { params: { id: string } }) {
     setVideoToDelete(videoId);
     onOpen();
   };
-
-  function convertSecondsToMinutes(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.round(seconds % 60);
-
-    return `${minutes}m ${remainingSeconds}s`;
-  }
 
   const isMobile = useBreakpointValue({ base: true, md: false });
 

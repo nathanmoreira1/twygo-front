@@ -9,6 +9,7 @@ export interface Course {
   id: number;
   title: string;
   description: string;
+  total_duration: number;
   start_date: string;
   end_date: string;
   created_at: string;

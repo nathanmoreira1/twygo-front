@@ -32,6 +32,7 @@ import axios from "axios";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { Course } from "./[id]/types";
+import { convertSecondsToMinutes } from "../helpers/convertSecondsToMinutes";
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
@@ -208,6 +209,10 @@ export default function Courses() {
                   <b>Descrição:</b> {course.description}
                 </Box>
                 <Box mt={2}>
+                  <b>Tempo de Duração:</b>{" "}
+                  {convertSecondsToMinutes(course.total_duration)}
+                </Box>
+                <Box mt={2}>
                   <b>Data de Criação:</b>{" "}
                   {new Date(course.created_at).toLocaleDateString()}
                 </Box>
@@ -248,6 +253,7 @@ export default function Courses() {
               <Tr>
                 <Th color="white">Título</Th>
                 <Th color="white">Descrição</Th>
+                <Th color="white">Tempo de Duração</Th>
                 <Th color="white">Data de Criação</Th>
                 <Th color="white">Ações</Th>
               </Tr>
@@ -258,6 +264,7 @@ export default function Courses() {
                   <Tr key={course.id}>
                     <Td>{course.title}</Td>
                     <Td>{course.description}</Td>
+                    <Td>{convertSecondsToMinutes(course.total_duration)}</Td>
                     <Td>{new Date(course.created_at).toLocaleDateString()}</Td>
                     <Td>
                       <Button
