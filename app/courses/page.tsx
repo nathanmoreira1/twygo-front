@@ -33,6 +33,7 @@ import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { Course } from "./[id]/types";
 import { convertSecondsToMinutes } from "../helpers/convertSecondsToMinutes";
+import { formatDate } from "../helpers/formatDate";
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
@@ -109,6 +110,8 @@ export default function Courses() {
       });
     }
   };
+
+  console.log(courses);
 
   const openDeleteModal = (courseId: number) => {
     setCourseToDelete(courseId);
@@ -213,8 +216,7 @@ export default function Courses() {
                   {convertSecondsToMinutes(course.total_duration)}
                 </Box>
                 <Box mt={2}>
-                  <b>Data de Término:</b>{" "}
-                  {new Date(course.end_date).toLocaleDateString()}
+                  <b>Data de Término:</b> {formatDate(course.end_date)}
                 </Box>
                 <Stack mt={4} direction="row" spacing="4">
                   <Button
@@ -265,7 +267,7 @@ export default function Courses() {
                     <Td>{course.title}</Td>
                     <Td>{course.description}</Td>
                     <Td>{convertSecondsToMinutes(course.total_duration)}</Td>
-                    <Td>{new Date(course.end_date).toLocaleDateString()}</Td>
+                    <Td>{formatDate(course.end_date)}</Td>
                     <Td>
                       <Button
                         variant="link"
