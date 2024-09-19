@@ -111,8 +111,6 @@ export default function Courses() {
     }
   };
 
-  console.log(courses);
-
   const openDeleteModal = (courseId: number) => {
     setCourseToDelete(courseId);
     onOpen();
